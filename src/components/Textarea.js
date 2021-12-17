@@ -3,12 +3,12 @@ import { Field, ErrorMessage } from "formik";
 import TextError from "./TextError";
 
 const Textarea = (props) => {
-  const { label, description, ...rest } = props;
+  const { label, name, ...rest } = props;
   return (
     <div className="form-control">
-      <label htmlFor={description}>{label}</label>
-      <Field as="textarea" id={description} name={description} {...rest} />
-      <ErrorMessage name={description} component={TextError} />
+      <label htmlFor={name}>{label}</label>
+      <Field as="textarea" id={name} name={name} {...rest} />
+      <ErrorMessage name={name} component={TextError} />
     </div>
   );
 };

@@ -11,31 +11,33 @@ const FormikContainer = () => {
 
   const dropdownOptions = [
     { key: "Choose VAT", value: "" },
-    { key: "Option 1", value: "19%" },
-    { key: "Option 2", value: "21%" },
-    { key: "Option 3", value: "23%" },
-    { key: "Option 4", value: "25%" },
+    { key: "19%", value: "19%" },
+    { key: "21%", value: "21%" },
+    { key: "23%", value: "23%" },
+    { key: "25%", value: "25%" },
   ];
 
   const initialValues = {
     description: "",
     radioOption: "",
     selectOption: "",
-    priceNettoEUR: 0,
+    priceNettoEUR: "",
     priceBruttoEUR: "",
   };
 
   const validationSchema = Yup.object({
     description: Yup.string()
       .required("Text is required")
+      .min(1)
       .max(250, "Text must not exceed 250 characters"),
     radioOption: Yup.string().required("Text is required"),
     selectOption: Yup.string().required("Text is required"),
     priceNettoEUR: Yup.number()
+      .transform((o, v) => parseFloat(v.replace(/,/g, "")))
+      .typeError("Please, input number")
       .required("Please, input number")
-      .positive()
-      .integer(),
-    priceBruttoEUR: Yup.string().required("Text is required"),
+      .positive("Price Netto EUR must be a positive number"),
+    priceBruttoEUR: Yup.number().required("Text is required"),
   });
   const onSubmit = (values) => console.log("Form data", values);
 
@@ -50,7 +52,7 @@ const FormikContainer = () => {
           <FormikControl
             control="textarea"
             label="Description"
-            description="description"
+            name="description"
           />
           <FormikControl
             control="radio"
@@ -66,12 +68,14 @@ const FormikContainer = () => {
             options={dropdownOptions}
           />
 
-          <FormikControl
-            control="input"
-            type="text"
-            label="Price Netto EUR"
-            priceNettoEUR="priceNettoEUR"
-          />
+          {formik.values.selectOption && (
+            <FormikControl
+              control="input"
+              type="text"
+              label="Price Netto EUR"
+              priceNettoEUR="priceNettoEUR"
+            />
+          )}
 
           <FormikControl
             control="input"
